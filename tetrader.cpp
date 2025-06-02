@@ -1,21 +1,21 @@
 #include "tetrader.h"
 #include <iostream>
 
-Tetrader::Tetrader()
-{
-    vertices =
-    {
-        Point (0, 0, 0),
-        Point (1, 0, 0),
-        Point (0, 1, 0),
-        Point (0, 0, 1) 
-    };
+Tetrader::Tetrader() : vertices{
+    Point(0, 0, 0),
+    Point(1, 0, 0),
+    Point(0, 1, 0),
+    Point(0, 0, 1)
+} {}
+
+Tetrader::Tetrader(const std::array<Point, 4>& points) {
+    set_vertices(points);
 }
 
 void Tetrader::set_vertices(const std::array<Point, 4>& points) {
-    for (size_t i = 0; i < 4; ++i) {
-        for (size_t j = i + 1; j < 4; ++j) {
-            if (std::fabs(points[i].calculating_the_distance(points[j])) < std::numeric_limits<double>::epsilon() * 100) {
+    for (size_t i = 0; i < points.size(); ++i) {
+        for (size_t j = i + 1; j < points.size(); ++j) {
+            if (points[i] == points[j]) {
                 std::cerr << "Ошибка: совпадающие точки!" << std::endl;
                 exit(1);
             }

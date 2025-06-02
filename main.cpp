@@ -2,18 +2,7 @@
 #include <cstdlib>
 #include "tetrader.h"
 
-Point inputPoint(int num) {
-    double x, y, z;
-    std::cout << "Введите координаты точки " << num << " (x y z): ";
-    std::cin >> x >> y >> z;
-    
-    if (std::cin.fail()) {
-        std::cerr << "Ошибка: некорректный ввод!" << std::endl;
-        std::exit(1);
-    }
-    
-    return Point(x, y, z);
-}
+Point inputPoint(int num);
 
 int main() {
     Tetrader tetra;
@@ -30,4 +19,17 @@ int main() {
               << tetra.calculate_area() << std::endl;
 
     return 0;
+}
+
+Point inputPoint(int num) {
+    double x, y, z;
+    std::cout << "Введите координаты точки " << num << " (x y z): ";
+    std::cin >> x >> y >> z;
+    
+    if (std::cin.fail()) {
+        std::cerr << "Ошибка: некорректный ввод!" << std::endl;
+        std::exit(1);
+    }
+    
+    return Point(x, y, z);
 }

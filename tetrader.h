@@ -17,6 +17,12 @@ class Tetrader //класс тетрайдер
         Tetrader();
         
         /**
+         * @brief конструктор с параметрами
+         * @param points массив из 4 точек
+         */
+        Tetrader(const std::array<Point, 4>& points);
+        
+        /**
          * @brief функция для установки вершин массива
          * @param points Массив из 4 точек
          */

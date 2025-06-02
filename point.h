@@ -28,4 +28,18 @@ class Point //класс точка
          * @return расстояние между точками
          */
         double calculating_the_distance(const Point &other) const;
+        
+        /**
+         * @brief оператор сравнения точек на равенство
+         * @param other точка для сравнения
+         * @return true если точки идентичны
+         */
+        bool operator==(const Point& other) const;
+        
+        /**
+         * @brief оператор сравнения точек на неравенство
+         * @param other точка для сравнения
+         * @return true если точки различаются
+         */
+        bool operator!=(const Point& other) const;
 };

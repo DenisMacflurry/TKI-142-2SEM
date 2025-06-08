@@ -1,43 +1,43 @@
-// tetrader.h
-#ifndef TETRADER_H
-#define TETRADER_H
+// tetrader.cpp
+#include "tetrader.h"
+#include <iostream>
+#include <stdexcept>
+#include <cmath>
+#include <limits>
 
-#include <array>
-#include "point.h"
+Tetrader::Tetrader() : vertices{
+    Point(0, 0, 0),
+    Point(1, 0, 0),
+    Point(0, 1, 0),
+    Point(0, 0, 1)
+} {}
 
-/**
- * @class Tetrader
- * @brief Класс, представляющий тетраэдр в трехмерном пространстве
- */
-class Tetrader {
-public:
-    /**
-     * @brief Конструктор по умолчанию, создает правильный тетраэдр
-     */
-    Tetrader();
-    
-    /**
-     * @brief Конструктор с пользовательскими вершинами
-     * @param points Массив из 4 точек - вершин тетраэдра
-     * @throws std::invalid_argument Если точки совпадают или образуют вырожденную фигуру
-     */
-    explicit Tetrader(const std::array<Point, 4>& points);
-    
-    /**
-     * @brief Вычисляет площадь основания тетраэдра
-     * @return Площадь треугольника-основания
-     */
-    double calculate_area() const;
-    
-private:
-    std::array<Point, 4> vertices;
-    
-    /**
-     * @brief Проверяет валидность вершин тетраэдра
-     * @param points Массив точек для проверки
-     * @throw std::invalid_argument Если точки не образуют тетраэдр
-     */
-    void validate_vertices(const std::array<Point, 4>& points) const;
-};
+Tetrader::Tetrader(const std::array<Point, 4>& points) {
+    validate_vertices(points);
+    vertices = points;
+}
 
-#endif // TETRADER_H
+void Tetrader::validate_vertices(const std::array<Point, 4>& points) const {
+    // Проверка на совпадающие точки
+    for (size_t i = 0; i < points.size(); ++i) {
+        for (size_t j = i + 1; j < points.size(); ++j) {
+            if (points[i] == points[j]) {
+                throw std::invalid_argument("Duplicate points detected");
+            }
+        }
+    }
+    
+}
+
+double Tetrader::calculate_area() const {
+    const Point& A = vertices[0];
+    const Point& B = vertices[1];
+    const Point& C = vertices[2];
+
+    double a = A.calculating_the_distance(B);
+    double b = B.calculating_the_distance(C);
+    double c = C.calculating_the_distance(A);
+
+    double p = (a + b + c) / 2;
+    return std::sqrt(p * (p - a) * (p - b) * (p - c));
+}

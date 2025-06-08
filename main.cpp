@@ -2,23 +2,39 @@
 #include <cstdlib>
 #include "tetrader.h"
 
+/**
+ * @brief Запрашивает у пользователя координаты точки
+ * @param num Номер точки (для отображения в приглашении)
+ * @return Объект Point с введенными координатами
+ * @throws std::runtime_error При ошибке ввода
+ */
 Point inputPoint(int num);
 
+/**
+ * @brief Основная функция программы
+ * @return 0 в случае успешного выполнения
+ */
 int main() {
-    Tetrader tetra;
-    std::cout << "Площадь основания (по умолчанию): " 
-              << tetra.calculate_area() << std::endl;
+    try {
+        Tetrader default_tetra;
+        std::cout << "Площадь основания (по умолчанию): " 
+                 << default_tetra.calculate_area() << std::endl;
 
-    std::array<Point, 4> points;
-    for (int i = 0; i < 4; ++i) {
-        points[i] = inputPoint(i + 1);
+        std::array<Point, 4> points;
+        for (size_t i = 0; i < 4; ++i) {
+            points[i] = inputPoint(i + 1);
+        }
+
+        Tetrader custom_tetra(points);
+        std::cout << "Площадь основания (пользовательская): " 
+                 << custom_tetra.calculate_area() << std::endl;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Ошибка: " << e.what() << std::endl;
+        return EXIT_FAILURE;
     }
-
-    tetra.set_vertices(points);
-    std::cout << "Площадь основания (пользовательская): " 
-              << tetra.calculate_area() << std::endl;
-
-    return 0;
+    
+    return EXIT_SUCCESS;
 }
 
 Point inputPoint(int num) {
@@ -28,7 +44,7 @@ Point inputPoint(int num) {
     
     if (std::cin.fail()) {
         std::cerr << "Ошибка: некорректный ввод!" << std::endl;
-        std::exit(1);
+        throw std::runtime_error("Input error");
     }
     
     return Point(x, y, z);

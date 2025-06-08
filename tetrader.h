@@ -1,36 +1,43 @@
-#pragma once
+// tetrader.h
+#ifndef TETRADER_H
+#define TETRADER_H
 
-#include "point.h"
 #include <array>
-#include <cstdlib>
-#include <limits>
-#include <cmath>
+#include "point.h"
 
-class Tetrader //класс тетрайдер
-{ 
-    private:
-        std::array<Point, 4> vertices; //вершины тетрайдера
-    public:
-        /**
-         * @brief конструктор по умолчанию
-         */
-        Tetrader();
-        
-        /**
-         * @brief конструктор с параметрами
-         * @param points массив из 4 точек
-         */
-        Tetrader(const std::array<Point, 4>& points);
-        
-        /**
-         * @brief функция для установки вершин массива
-         * @param points Массив из 4 точек
-         */
-        void set_vertices(const std::array<Point, 4> &points);
-
-        /**
-         * @brief функция для вычисления площади основания
-         * @return рассчитанная площадь основания
-         */
-        double calculate_area() const;
+/**
+ * @class Tetrader
+ * @brief Класс, представляющий тетраэдр в трехмерном пространстве
+ */
+class Tetrader {
+public:
+    /**
+     * @brief Конструктор по умолчанию, создает правильный тетраэдр
+     */
+    Tetrader();
+    
+    /**
+     * @brief Конструктор с пользовательскими вершинами
+     * @param points Массив из 4 точек - вершин тетраэдра
+     * @throws std::invalid_argument Если точки совпадают или образуют вырожденную фигуру
+     */
+    explicit Tetrader(const std::array<Point, 4>& points);
+    
+    /**
+     * @brief Вычисляет площадь основания тетраэдра
+     * @return Площадь треугольника-основания
+     */
+    double calculate_area() const;
+    
+private:
+    std::array<Point, 4> vertices;
+    
+    /**
+     * @brief Проверяет валидность вершин тетраэдра
+     * @param points Массив точек для проверки
+     * @throw std::invalid_argument Если точки не образуют тетраэдр
+     */
+    void validate_vertices(const std::array<Point, 4>& points) const;
 };
+
+#endif // TETRADER_H

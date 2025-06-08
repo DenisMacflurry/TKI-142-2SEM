@@ -1,5 +1,9 @@
+// tetrader.cpp
 #include "tetrader.h"
 #include <iostream>
+#include <stdexcept>
+#include <cmath>
+#include <limits>
 
 Tetrader::Tetrader() : vertices{
     Point(0, 0, 0),
@@ -9,19 +13,20 @@ Tetrader::Tetrader() : vertices{
 } {}
 
 Tetrader::Tetrader(const std::array<Point, 4>& points) {
-    set_vertices(points);
+    validate_vertices(points);
+    vertices = points;
 }
 
-void Tetrader::set_vertices(const std::array<Point, 4>& points) {
+void Tetrader::validate_vertices(const std::array<Point, 4>& points) const {
+    // Проверка на совпадающие точки
     for (size_t i = 0; i < points.size(); ++i) {
         for (size_t j = i + 1; j < points.size(); ++j) {
             if (points[i] == points[j]) {
-                std::cerr << "Ошибка: совпадающие точки!" << std::endl;
-                exit(1);
+                throw std::invalid_argument("Duplicate points detected");
             }
         }
     }
-    vertices = points;
+    
 }
 
 double Tetrader::calculate_area() const {
@@ -33,20 +38,6 @@ double Tetrader::calculate_area() const {
     double b = B.calculating_the_distance(C);
     double c = C.calculating_the_distance(A);
 
-    if ((a + b - c) < std::numeric_limits<double>::epsilon() * 100 ||
-        (a + c - b) < std::numeric_limits<double>::epsilon() * 100 || 
-        (b + c - a) < std::numeric_limits<double>::epsilon() * 100) {
-        std::cerr << "Ошибка: вырожденный треугольник!" << std::endl;
-        exit(1);
-    }
-
     double p = (a + b + c) / 2;
-    double area = p * (p - a) * (p - b) * (p - c);
-    
-    if (area < 0 && !(std::fabs(area) < std::numeric_limits<double>::epsilon() * 100)) {
-        std::cerr << "Ошибка: некорректная площадь!" << std::endl;
-        exit(1);
-    }
-
-    return std::sqrt(std::fmax(0, area));
+    return std::sqrt(p * (p - a) * (p - b) * (p - c));
 }

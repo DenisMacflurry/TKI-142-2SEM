@@ -11,7 +11,7 @@ Tetrader::Tetrader(const std::array<Point, 4>& points) : vertices(points) {
         }
     }
 
-    // Проверка всех 4 граней через неравенство треугольников
+    // Проверка всех 3 граней через неравенство треугольников
     const auto check_triangle = [](const Point& p1, const Point& p2, const Point& p3) {
         double a = p1.calculating_the_distance(p2);
         double b = p2.calculating_the_distance(p3);
@@ -20,11 +20,10 @@ Tetrader::Tetrader(const std::array<Point, 4>& points) : vertices(points) {
         return (a + b > c) && (a + c > b) && (b + c > a);
     };
 
-    // ABC, ABD, ACD, BCD
+    // ABC, ABD, ACD
     if (!check_triangle(vertices[0], vertices[1], vertices[2]) ||
         !check_triangle(vertices[0], vertices[1], vertices[3]) ||
-        !check_triangle(vertices[0], vertices[2], vertices[3]) ||
-        !check_triangle(vertices[1], vertices[2], vertices[3])) {
+        !check_triangle(vertices[0], vertices[2], vertices[3])) {
         throw std::invalid_argument("Неправильный тетраэдр — одна или несколько граней не удовлетворяют неравенству треугольника");
     }
 }

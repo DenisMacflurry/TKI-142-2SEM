@@ -6,7 +6,7 @@ Tetrader::Tetrader(const std::array<Point, 4>& points) : vertices(points) {
     for (size_t i = 0; i < vertices.size(); ++i) {
         for (size_t j = i + 1; j < vertices.size(); ++j) {
             if (vertices[i] == vertices[j]) {
-                throw std::invalid_argument("Tetrahedron cannot have duplicate points");
+                throw std::invalid_argument("Тетраэдр не может иметь одинаковых точек");
             }
         }
     }
@@ -25,7 +25,7 @@ Tetrader::Tetrader(const std::array<Point, 4>& points) : vertices(points) {
         !check_triangle(vertices[0], vertices[1], vertices[3]) ||
         !check_triangle(vertices[0], vertices[2], vertices[3]) ||
         !check_triangle(vertices[1], vertices[2], vertices[3])) {
-        throw std::invalid_argument("Неправильный тетраэдр — одна или несколько граней не удовлетворяют неравенству треугольника.");
+        throw std::invalid_argument("Неправильный тетраэдр — одна или несколько граней не удовлетворяют неравенству треугольника");
     }
 }
 

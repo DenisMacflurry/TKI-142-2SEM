@@ -1,42 +1,39 @@
-// tetrader.cpp
 #include "tetrader.h"
-#include <iostream>
-#include <stdexcept>
 #include <cmath>
-#include <limits>
-
-Tetrader::Tetrader() : vertices{
-    Point(0, 0, 0),
-    Point(1, 0, 0),
-    Point(0, 1, 0),
-    Point(0, 0, 1)
-} {}
-
-Tetrader::Tetrader(const std::array<Point, 4>& points) {
-    validate_vertices(points);
-    vertices = points;
-}
-
-void Tetrader::validate_vertices(const std::array<Point, 4>& points) const {
-    // Проверка на совпадающие точки
-    for (size_t i = 0; i < points.size(); ++i) {
-        for (size_t j = i + 1; j < points.size(); ++j) {
-            if (points[i] == points[j]) {
-                throw std::invalid_argument("Duplicate points detected");
+#include <stdexcept>
+Tetrader::Tetrader(const std::array<Point, 4>& points) : vertices(points) {
+    // Проверка на дубликаты точек
+    for (size_t i = 0; i < vertices.size(); ++i) {
+        for (size_t j = i + 1; j < vertices.size(); ++j) {
+            if (vertices[i] == vertices[j]) {
+                throw std::invalid_argument("Tetrahedron cannot have duplicate points");
             }
         }
     }
-    
+
+    // Проверка всех 4 граней через неравенство треугольников
+    const auto check_triangle = [](const Point& p1, const Point& p2, const Point& p3) {
+        double a = p1.calculating_the_distance(p2);
+        double b = p2.calculating_the_distance(p3);
+        double c = p3.calculating_the_distance(p1);
+        
+        return (a + b > c) && (a + c > b) && (b + c > a);
+    };
+
+    // ABC, ABD, ACD, BCD
+    if (!check_triangle(vertices[0], vertices[1], vertices[2]) ||
+        !check_triangle(vertices[0], vertices[1], vertices[3]) ||
+        !check_triangle(vertices[0], vertices[2], vertices[3]) ||
+        !check_triangle(vertices[1], vertices[2], vertices[3])) {
+        throw std::invalid_argument("Неправильный тетраэдр — одна или несколько граней не удовлетворяют неравенству треугольника.");
+    }
 }
 
 double Tetrader::calculate_area() const {
-    const Point& A = vertices[0];
-    const Point& B = vertices[1];
-    const Point& C = vertices[2];
-
-    double a = A.calculating_the_distance(B);
-    double b = B.calculating_the_distance(C);
-    double c = C.calculating_the_distance(A);
+    // Расчет площади первой грани ABC
+    double a = vertices[0].calculating_the_distance(vertices[1]);
+    double b = vertices[1].calculating_the_distance(vertices[2]);
+    double c = vertices[2].calculating_the_distance(vertices[0]);
 
     double p = (a + b + c) / 2;
     return std::sqrt(p * (p - a) * (p - b) * (p - c));
